@@ -10,15 +10,21 @@ Elasticsearch 5.X
 
 **Example:**
 
-reindex one index
+**reindex one index**
 ```sh
-$ ./elasticsearch-reindex -u http://localhost:9200 -i logstash.nginx-2017.02.25
+$ elasticsearch-reindex -u http://localhost:9200 -s logstash.nginx-2017.02.25
 ```
+It will be indexed logstash.nginx-2017.02.25
 
-reindex by pattern
+**reindex by pattern**
 ```sh
-$ ./elasticsearch-reindex -u http://localhost:9200 -i logstash.nginx*
+$ elasticsearch-reindex -u http://localhost:9200 -p logstash.nginx
 ```
+It will be indexed
+* logstash.nginx-2017.02.25
+* logstash.nginx-2017.02.26
+* logstash.nginx-2017.02.27
+* etc.
 
 **Algorithm**
 

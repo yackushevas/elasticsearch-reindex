@@ -12,15 +12,18 @@ import (
 )
 
 var (
-	// OldIndexName which will be reindexed
-	OldIndexName string
 	// url cluster ES
 	url string
+	// single index
+	singleIndex string
+	// pattern index
+	patternIndex string
 )
 
 func init() {
-	flag.StringVar(&OldIndexName, "i", OldIndexName, "index name")
 	flag.StringVar(&url, "u", url, "e.g. http://localhost:9200")
+	flag.StringVar(&singleIndex, "s", singleIndex, "single index rendex")
+	flag.StringVar(&patternIndex, "p", singleIndex, "rendex by pattern")
 }
 
 // ReindexMatched todo
@@ -94,8 +97,11 @@ func main() {
 	if url == "" {
 		log.Fatal("missing url parameter")
 	}
-	if OldIndexName == "" {
-		log.Fatal("missing index pattern parameter")
+
+	if singleIndex == "" {
+		if patternIndex == "" {
+			log.Fatal("missing index name or index patter parameter")
+		}
 	}
 
 	client, err := elastic.NewClient(
@@ -113,8 +119,8 @@ func main() {
 
 	var SliceIndex []string
 	for _, index := range indices {
-		if len(OldIndexName) > 0 {
-			matched, err := regexp.MatchString(OldIndexName, index)
+		if len(patternIndex) > 0 {
+			matched, err := regexp.MatchString(patternIndex, index)
 			if err != nil {
 				log.Fatal("invalid index pattern")
 			}
@@ -124,7 +130,13 @@ func main() {
 		}
 	}
 
-	for _, element := range SliceIndex {
-		ReindexMatched(element)
+	if singleIndex != "" {
+		ReindexMatched(singleIndex)
+	}
+
+	if patternIndex != "" {
+		for _, element := range SliceIndex {
+			ReindexMatched(element)
+		}
 	}
 }
