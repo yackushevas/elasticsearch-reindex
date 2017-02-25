@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"sort"
 	"time"
 
 	elastic "gopkg.in/olivere/elastic.v5"
@@ -116,6 +117,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Sort by default
+	sort.Strings(indices)
 
 	var SliceIndex []string
 	for _, index := range indices {
